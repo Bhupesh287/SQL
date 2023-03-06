@@ -35,7 +35,7 @@ INSERT INTO Emp VALUES(1, "ADAMS", 1000, 'Mumbai', 10);
 INSERT INTO Emp VALUES(2, "BIAKE", 2000, 'Delhi', 10),(3, "ALLEN", 2500, 'Mumbai', 20),
 (4, "KING", 3000, 'Delhi', 30),(5, "FORD", 4000, 'Mumbai', 40);
 
-#############################################  NOTES  ###########################################
+###################################################  NOTES  #####################################################
 
 select * from people;
 
@@ -53,7 +53,7 @@ select * from address;
 #to eliminate duplicate values
 select distinct id from address;
 
-#ORDER BY clause
+############ ORDER BY clause ###########3
 select id,address from address order by id;      #by default ascending order
 select id,address from address order by id desc;  
 select id,address from address order by id,address;     #it will 1st sort on id & if id has same 2 rows then it will sort it on address
@@ -88,7 +88,7 @@ select sal from emp where sal>=2000 and sal<=3000;
 select Ename from Emp where Ename between 'A' and 'c';
 select sal from Emp where sal not between 2000 and 3000;
 
-# ANY & IN operator
+#ANY & IN operator
 select * from Emp where deptno=10 or deptno=20;
 select * from Emp where DeptNo = any(10,20);    #ANY not works in mysql
 select * from Emp where DeptNo in (10,20);
@@ -97,3 +97,118 @@ select * from Emp where DeptNo in (10,20);
                                            #with IN we can check for 'IN' or 'NOT IN'
                                            #with ANY we can check =ANY  !=ANY  >=ANY  <=ANY <ANY 
 
+                                           
+										
+########################SQL-FUNCTIONS############################
+ 
+######## Character Functions ########
+                                      #'||' is concatenation operator-------------but not works in MYSQL
+select concat(ename,city) from emp;
+select concat(concat(ename,' '), city) 'fun_in_fun' from emp;
+select concat(ename,' ',city) from emp;
+  
+select upper(city) from emp; 
+select lower(ename) from emp; 
+  
+                                            #index starts from 1
+select ename,substr(ename,2) from emp;      #it will print string from 2nd char
+select ename,substr(ename,2,3) from emp;    #2---starting postion     3---no.of char
+select ename,substr(ename,-2) from emp;     #supports negative index
+select ename,substr(ename,-3,2) from emp;
+  
+select ename,concat(upper(substr(ename,1,1)),lower(substr(ename,2))) from emp;  #Combination of CONCAT(), UPPER(), LOWER(), SUBSTR()
+
+select ename, replace(ename,'A','B') from emp;
+
+select ename, instr(ename,'A') from emp;      #gives the string position
+                                              #it only take 2 parameters,here we cant provide starting position to search, it will automatically search from 1st index.
+
+select ename, length(ename) from emp;
+
+######## NUMBER FUNCTIONS ########
+ 
+select * from people;
+select tax,round(tax) from people;
+select tax,round(tax,2) from people;
+select tax,round(tax,-1) from people;
+select tax,round(tax,-2) from people;
+                                              #ROUND() & TRUNCATE() are same.
+select tax,truncate(tax,1) from people;
+select tax,truncate(tax,-2) from people;
+  
+select tax,ceil(tax) from people;            #ceiling
+select tax,floor(tax) from people;                                              
+
+select mod(5,2);
+select sqrt(81);
+select power(5,2);
+select abs(-10);
+
+######## DATE & TIME Functions ########
+
+# 'YYYY-MM-DD' ----------by default
+
+select sysdate();            #returns server current date & time
+select now();                #returns server current date & time
+select sysdate(),now(),sleep(2),sysdate(),now();
+                             # SYSDATE() returns the time at which it executes. This differs from the behavior for NOW(), which returns a constant time that indicates the time at which the statement began to execute.
+select * from address;
+select datediff(sysdate(),updatedate) from address;    #returns the no. of days between two dates.
+select dayname(sysdate());
+
+######## LIST Function ########
+
+select * from people;
+insert into people(id,name) values(5,"z");
+
+select * from people where salary=null;          #Any comparison done with null returns null.
+select * from people where salary is null;       #Returns rows whose salary is null
+select * from people where salary is not null;
+select ifnull(salary,100) from people;           #it means if salary is null then returns 100 in that place.
+select salary + ifnull(tax,100) total from people;
+select ifnull(salary,100) + ifnull(tax,10) total from people;
+
+select greatest(salary,20000) from people;       #it will compare each salary with 20000 and returns greatest from each salary.
+select least(salary,20000) from people;          #it will compare each salary with 20000 and returns lowest from each salary.
+
+
+######################### CASE Expression #####################
+
+select * from people;
+
+select case
+when salary>20000 then 'Very Good'
+when salary<20000 then 'Bad'
+else 'Good'
+end
+from people;
+
+
+######################### AGREEGATE Functions #####################
+
+# NULL values are not counted in agreegate functions. otherwise that will affect to count(), avg().
+
+select * from people;
+select sum(salary) sum from people;
+select avg(salary) average from people;
+select min(salary) from people;
+select max(salary) from people;
+select count(salary) from people;
+select count(*) from people;
+
+select sum(salary)/count(*) from people;
+
+select * from people where salary=min(salary);  #error---->we can't use agreegate func in where clause.
+
+####################### GROUP BY Clause ########################
+show databases;
+use exmpractice;
+show tables;
+select * from customers;
+select * from department;
+select * from dept;
+select * from emp;
+select * from employees;
+select * from orders;
+
+select job, sum(sal) from emp group by job;
