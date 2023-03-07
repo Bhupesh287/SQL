@@ -44,3 +44,10 @@ end @
 delimiter ; 
 
 call gets('bhupesh');
+
+call gets('bhupesh');
+
+select * from w3school;
+insert into w3school values(4,'abcd',9999,'xyz');       #No need to mention column names when you provide values for all columns sequentially
+insert into w3school(id,name) values(5,'unknown');      #If you are providing values for only certain columns then need to provide column names
+                                                        #for remaining columns it will take NULL values
